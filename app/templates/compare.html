@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Compare Movies</title>
+</head>
+<body>
+    <h1>Compare Two Movies</h1>
+    <form id="compareForm">
+        <label for="movie1">Movie 1:</label>
+        <select name="movie1" id="movie1">
+            {% for movie in movies %}
+            <option value="{{ movie.id }}">{{ movie.title }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="movie2">Movie 2:</label>
+        <select name="movie2" id="movie2">
+            {% for movie in movies %}
+            <option value="{{ movie.id }}">{{ movie.title }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Compare</button>
+    </form>
+
+    <br>
+    <a href="/">← Back to homepage</a>
+
+    <hr>
+
+    <canvas id="compareChart" width="400" height="200"></canvas>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const form = document.getElementById('compareForm');
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();  // Stop form from reloading the page
+
+        const movie1 = document.getElementById('movie1').value;
+        const movie2 = document.getElementById('movie2').value;
+
+        fetch(`/api/compare/${movie1}/${movie2}`)
+            .then(res => res.json())
+            .then(data => {
+                const labels = ['Rating', 'Votes'];
+                const chartData = {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: data.movie1.title,
+                            data: [data.movie1.rating, data.movie1.votes],
+                        },
+                        {
+                            label: data.movie2.title,
+                            data: [data.movie2.rating, data.movie2.votes],
+                        }
+                    ]
+                };
+
+                const config = {
+                    type: 'bar',
+                    data: chartData,
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                };
+
+                // Destroy previous chart before creating a new one
+                if (window

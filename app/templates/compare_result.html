@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Comparison Results</title>
+</head>
+<body>
+    <h1>Comparison</h1>
+    <table border="1">
+        <tr>
+            <th></th>
+            <th>{{ movie1.title }}</th>
+            <th>{{ movie2.title }}</th>
+        </tr>
+        <tr>
+            <td>Release Date</td>
+            <td>{{ movie1.release_date }}</td>
+            <td>{{ movie2.release_date }}</td>
+        </tr>
+        <tr>
+            <td>Rating</td>
+            <td>{{ movie1.vote_average }}</td>
+            <td>{{ movie2.vote_average }}</td>
+        </tr>
+        <tr>
+            <td>Votes</td>
+            <td>{{ movie1.vote_count }}</td>
+            <td>{{ movie2.vote_count }}</td>
+        </tr>
+        <tr>
+            <td>Popularity</td>
+            <td>{{ movie1.popularity }}</td>
+            <td>{{ movie2.popularity }}</td>
+        </tr>
+    </table>
+
+    <br>
+    <a href="/compare">← Compare Another</a> |
+    <a href="/">← Back to Homepage</a>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ movie.title }} - Details</title>
+</head>
+<body>
+    <h1>{{ movie.title }}</h1>
+    <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+    <p><strong>Popularity:</strong> {{ movie.popularity }}</p>
+    <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
+    <p><strong>Votes:</strong> {{ movie.vote_count }}</p>
+    <br>
+    <a href="/">← Back to homepage</a>
+</body>
+</html>
+<h2>Reviews</h2><!DOCTYPE html>
+<html>
+<head>
+    <title>{{ movie.title }} - Details</title>
+</head>
+<body>
+    <h1>{{ movie.title }}</h1>
+    <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+    <p><strong>Popularity:</strong> {{ movie.popularity }}</p>
+    <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
+    <p><strong>Votes:</strong> {{ movie.vote_count }}</p>
+    <br>
+    <a href="/">← Back to homepage</a>
+
+    <hr>
+
+    <h2>Reviews</h2>
+    {% if movie.reviews %}
+        <ul>
+            {% for review in movie.reviews %}
+            <li>
+                <strong>{{ review.reviewer_name }}</strong>: {{ review.comment }} (Rating: {{ review.rating }})
+            </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No reviews yet.</p>
+    {% endif %}
+
+    <hr>
+
+    <h3>Submit a Review</h3>
+    <form action="{{ url_for('main.add_review', movie_id=movie.id) }}" method="post">
+        <label for="reviewer_name">Your Name:</label><br>
+        <input type="text" id="reviewer_name" name="reviewer_name" required><br><br>
+
+        <label for="rating">Rating (1-5):</label><br>
+        <input type="number" id="rating" name="rating" min="1" max="5" required><br><br>
+
+        <label for="comment">Comment:</label><br>
+        <textarea id="comment" name="comment" rows="4" cols="40" required></textarea><br><br>
+
+        <button type="submit">Submit Review</button>
+    </form>
+</body>
+</html>
+
+{% if movie.reviews %}
+    <ul>
+        {% for review in movie.reviews %}
+        <li>
+            <strong>{{ review.reviewer }}</strong>: {{ review.comment }} (Rating: {{ review.rating }})
+        </li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No reviews yet.</p>
+{% endif %}

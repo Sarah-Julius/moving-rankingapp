@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Rankings</title>
+</head>
+<body>
+    <h1>Top 20 Movies</h1>
+    <ul>
+        {% for movie in movies %}
+        <li>
+            <strong>
+                <a href="/movie/{{ movie.id }}">{{ movie.title }}</a>
+            </strong>
+            ({{ movie.release_date }})<br>
+            Rating: {{ movie.vote_average }} | Votes: {{ movie.vote_count }}
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
+<p><a href="/compare">Compare Two Movies</a></p>
