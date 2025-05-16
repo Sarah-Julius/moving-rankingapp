@@ -13,7 +13,7 @@ def home():
     if genre_id:
         movies = Movie.query.join(Movie.genres).filter(Genre.id == genre_id).paginate(page=page, per_page=10)
     else:
-        movies = Movie.query.paginate(page=page, per_page=10)
+        movies = Movie.query.paginate(page=page, per_page=50)
 
     return render_template('home.html', movies=movies, genres=genres)
 
