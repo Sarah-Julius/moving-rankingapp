@@ -1,13 +1,21 @@
 from flask import Blueprint, render_template, request, redirect, url_for
 from .models import Movie, Review
-from . import db  # SQLAlchemy instance
+from . import db
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def home():
-    movies = Movie.query.limit(10).all()
-    return render_template('home.html', movies=movies)
+    from .models import Genre
+    genre_id = request.args.get('genre')
+    genres = Genre.query.all()
+
+    if genre_id:
+        movies = Movie.query.join(Movie.genres).filter(Genre.id == genre_id).all()
+    else:
+        movies = Movie.query.limit(20).all()
+
+    return render_template('home.html', movies=movies, genres=genres)
 
 @main.route('/movie/<int:movie_id>')
 def movie_detail(movie_id):
@@ -33,8 +41,11 @@ def compare_movies():
     if request.method == 'POST':
         movie1_id = int(request.form['movie1'])
         movie2_id = int(request.form['movie2'])
+
         movie1 = Movie.query.get(movie1_id)
         movie2 = Movie.query.get(movie2_id)
+
+        # ✅ Pass movie objects (not just IDs)
         return render_template('compare_result.html', movie1=movie1, movie2=movie2)
 
     return render_template('compare.html', movies=movies)
@@ -44,7 +55,7 @@ def compare_movies_json(id1, id2):
     movie1 = Movie.query.get_or_404(id1)
     movie2 = Movie.query.get_or_404(id2)
 
-    data = {
+    return {
         "movie1": {
             "title": movie1.title,
             "rating": movie1.vote_average,
@@ -56,4 +67,32 @@ def compare_movies_json(id1, id2):
             "votes": movie2.vote_count
         }
     }
-    return data  # Flask automatically returns JSON
+
+@main.route('/add_movie', methods=['GET', 'POST'])
+def add_movie():
+    from .models import Genre
+    genres = Genre.query.all()
+
+    if request.method == 'POST':
+        title = request.form['title']
+        release_date = request.form['release_date']
+        popularity = float(request.form['popularity'])
+        vote_average = float(request.form['vote_average'])
+        vote_count = int(request.form['vote_count'])
+
+        genre_ids = request.form.getlist('genres')
+        selected_genres = Genre.query.filter(Genre.id.in_(genre_ids)).all()
+
+        new_movie = Movie(
+            title=title,
+            release_date=release_date,
+            popularity=popularity,
+            vote_average=vote_average,
+            vote_count=vote_count,
+            genres=selected_genres
+        )
+        db.session.add(new_movie)
+        db.session.commit()
+        return redirect(url_for('main.home'))
+
+    return render_template('add_movie.html', genres=genres)

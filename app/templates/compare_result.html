@@ -1,40 +1,38 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Comparison Results</title>
+    <title>Compare</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <h1>Comparison</h1>
-    <table border="1">
-        <tr>
-            <th></th>
-            <th>{{ movie1.title }}</th>
-            <th>{{ movie2.title }}</th>
-        </tr>
-        <tr>
-            <td>Release Date</td>
-            <td>{{ movie1.release_date }}</td>
-            <td>{{ movie2.release_date }}</td>
-        </tr>
-        <tr>
-            <td>Rating</td>
-            <td>{{ movie1.vote_average }}</td>
-            <td>{{ movie2.vote_average }}</td>
-        </tr>
-        <tr>
-            <td>Votes</td>
-            <td>{{ movie1.vote_count }}</td>
-            <td>{{ movie2.vote_count }}</td>
-        </tr>
-        <tr>
-            <td>Popularity</td>
-            <td>{{ movie1.popularity }}</td>
-            <td>{{ movie2.popularity }}</td>
-        </tr>
-    </table>
+    <h1>Comparing {{ movie1.title }} and {{ movie2.title }}</h1>
+    <canvas id="compareChart"></canvas>
 
-    <br>
-    <a href="/compare">← Compare Another</a> |
-    <a href="/">← Back to Homepage</a>
+    <script>
+        fetch(`/api/compare/{{ movie1.id }}/{{ movie2.id }}`)
+            .then(res => res.json())
+            .then(data => {
+                new Chart(document.getElementById('compareChart'), {
+                    type: 'bar',
+                    data: {
+                        labels: ['Rating', 'Votes'],
+                        datasets: [
+                            {
+                                label: data.movie1.title,
+                                data: [data.movie1.rating, data.movie1.votes]
+                            },
+                            {
+                                label: data.movie2.title,
+                                data: [data.movie2.rating, data.movie2.votes]
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: { y: { beginAtZero: true } }
+                    }
+                });
+            })
+            .catch(err => console.error("Fetch failed", err));
+    </script>
 </body>
 </html>

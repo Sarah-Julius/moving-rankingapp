@@ -2,6 +2,16 @@
 <html>
 <head>
     <title>{{ movie.title }} - Details</title>
+    <p><strong>Genres:</strong>
+    {% if movie.genres %}
+        {% for genre in movie.genres %}
+            {{ genre.name }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    {% else %}
+        No genres assigned.
+    {% endif %}
+</p>
+
 </head>
 <body>
     <h1>{{ movie.title }}</h1>

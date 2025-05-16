@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add New Movie</title>
+</head>
+<body>
+    <h1>Add a New Movie</h1>
+    <form method="POST">
+        <label>Title:</label><br>
+        <input type="text" name="title"><br>
+
+        <label>Release Date:</label><br>
+        <input type="text" name="release_date"><br>
+
+        <label>Popularity:</label><br>
+        <input type="text" name="popularity"><br>
+
+        <label>Vote Average:</label><br>
+        <input type="text" name="vote_average"><br>
+
+        <label>Vote Count:</label><br>
+        <input type="text" name="vote_count"><br>
+
+        <label>Genres:</label><br>
+        {% for genre in genres %}
+            <input type="checkbox" name="genres" value="{{ genre.id }}"> {{ genre.name }}<br>
+        {% endfor %}
+
+        <br>
+        <button type="submit">Add Movie</button>
+    </form>
+
+    <br><a href="/">← Back to homepage</a>
+</body>
+</html>
+
+<form method="POST">
+  <input type="text" name="title" placeholder="Title" required>
+  <input type="text" name="release_date" placeholder="Release Date" required>
+  <input type="text" name="popularity" placeholder="Popularity" required>
+  <input type="text" name="vote_average" placeholder="Vote Average" required>
+  <input type="text" name="vote_count" placeholder="Vote Count" required>
+
+  <label>Genres:</label><br>
+  {% for genre in genres %}
+    <input type="checkbox" name="genres" value="{{ genre.id }}"> {{ genre.name }}<br>
+  {% endfor %}
+
+  <button type="submit">Add Movie</button>
+</form>
