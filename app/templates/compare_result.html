@@ -1,38 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Compare</title>
+    <title>Compare Results</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body>
-    <h1>Comparing {{ movie1.title }} and {{ movie2.title }}</h1>
-    <canvas id="compareChart"></canvas>
+<body class="bg-light">
+<div class="container py-4">
+    <h1 class="text-center text-primary">📊 Movie Comparison</h1>
 
-    <script>
-        fetch(`/api/compare/{{ movie1.id }}/{{ movie2.id }}`)
-            .then(res => res.json())
-            .then(data => {
-                new Chart(document.getElementById('compareChart'), {
-                    type: 'bar',
-                    data: {
-                        labels: ['Rating', 'Votes'],
-                        datasets: [
-                            {
-                                label: data.movie1.title,
-                                data: [data.movie1.rating, data.movie1.votes]
-                            },
-                            {
-                                label: data.movie2.title,
-                                data: [data.movie2.rating, data.movie2.votes]
-                            }
-                        ]
-                    },
-                    options: {
-                        scales: { y: { beginAtZero: true } }
-                    }
-                });
-            })
-            .catch(err => console.error("Fetch failed", err));
-    </script>
+    <div class="row my-4">
+        <div class="col-md-6">
+            <h3>{{ movie1.title }}</h3>
+            <p><strong>Rating:</strong> {{ movie1.vote_average }}</p>
+            <p><strong>Votes:</strong> {{ movie1.vote_count }}</p>
+            <p><strong>Popularity:</strong> {{ movie1.popularity }}</p>
+        </div>
+        <div class="col-md-6">
+            <h3>{{ movie2.title }}</h3>
+            <p><strong>Rating:</strong> {{ movie2.vote_average }}</p>
+            <p><strong>Votes:</strong> {{ movie2.vote_count }}</p>
+            <p><strong>Popularity:</strong> {{ movie2.popularity }}</p>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <canvas id="comparisonChart" height="120"></canvas>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('main.home') }}" class="btn btn-outline-secondary">← Back to Home</a>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('comparisonChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Rating', 'Votes', 'Popularity'],
+            datasets: [
+                {
+                    label: '{{ movie1.title }}',
+                    data: [{{ movie1.vote_average }}, {{ movie1.vote_count }}, {{ movie1.popularity }}],
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)'
+                },
+                {
+                    label: '{{ movie2.title }}',
+                    data: [{{ movie2.vote_average }}, {{ movie2.vote_count }}, {{ movie2.popularity }}],
+                    backgroundColor: 'rgba(255, 99, 132, 0.7)'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
 </body>
 </html>

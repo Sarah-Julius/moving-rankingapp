@@ -1,83 +1,65 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{ movie.title }} - Details</title>
+    <title>{{ movie.title }}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<!-- Optional Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="{{ url_for('main.home') }}">Movie App</a>
+  </div>
+</nav>
+
+<div class="container py-4">
+    <h1 class="text-primary">{{ movie.title }}</h1>
+    <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+    <p><strong>Rating:</strong> {{ movie.vote_average }} ({{ movie.vote_count }} votes)</p>
+    <p><strong>Popularity:</strong> {{ movie.popularity }}</p>
     <p><strong>Genres:</strong>
-    {% if movie.genres %}
         {% for genre in movie.genres %}
-            {{ genre.name }}{% if not loop.last %}, {% endif %}
+            <span class="badge bg-secondary">{{ genre.name }}</span>
         {% endfor %}
-    {% else %}
-        No genres assigned.
-    {% endif %}
-</p>
-
-</head>
-<body>
-    <h1>{{ movie.title }}</h1>
-    <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-    <p><strong>Popularity:</strong> {{ movie.popularity }}</p>
-    <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
-    <p><strong>Votes:</strong> {{ movie.vote_count }}</p>
-    <br>
-    <a href="/">← Back to homepage</a>
-</body>
-</html>
-<h2>Reviews</h2><!DOCTYPE html>
-<html>
-<head>
-    <title>{{ movie.title }} - Details</title>
-</head>
-<body>
-    <h1>{{ movie.title }}</h1>
-    <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
-    <p><strong>Popularity:</strong> {{ movie.popularity }}</p>
-    <p><strong>Rating:</strong> {{ movie.vote_average }}</p>
-    <p><strong>Votes:</strong> {{ movie.vote_count }}</p>
-    <br>
-    <a href="/">← Back to homepage</a>
+    </p>
 
     <hr>
 
-    <h2>Reviews</h2>
-    {% if movie.reviews %}
-        <ul>
-            {% for review in movie.reviews %}
-            <li>
-                <strong>{{ review.reviewer_name }}</strong>: {{ review.comment }} (Rating: {{ review.rating }})
-            </li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>No reviews yet.</p>
-    {% endif %}
-
-    <hr>
-
-    <h3>Submit a Review</h3>
-    <form action="{{ url_for('main.add_review', movie_id=movie.id) }}" method="post">
-        <label for="reviewer_name">Your Name:</label><br>
-        <input type="text" id="reviewer_name" name="reviewer_name" required><br><br>
-
-        <label for="rating">Rating (1-5):</label><br>
-        <input type="number" id="rating" name="rating" min="1" max="5" required><br><br>
-
-        <label for="comment">Comment:</label><br>
-        <textarea id="comment" name="comment" rows="4" cols="40" required></textarea><br><br>
-
-        <button type="submit">Submit Review</button>
+    <h4>Submit a Review</h4>
+    <form method="POST" action="{{ url_for('main.add_review', movie_id=movie.id) }}" class="mb-4">
+        <div class="mb-3">
+            <input type="text" name="reviewer_name" placeholder="Your name" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <input type="number" name="rating" min="1" max="10" placeholder="Rating (1-10)" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <textarea name="comment" rows="3" placeholder="Your review..." class="form-control" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Review</button>
     </form>
-</body>
-</html>
 
-{% if movie.reviews %}
-    <ul>
-        {% for review in movie.reviews %}
-        <li>
-            <strong>{{ review.reviewer }}</strong>: {{ review.comment }} (Rating: {{ review.rating }})
+    {% if reviews %}
+    <h4>User Reviews</h4>
+    <ul class="list-group mb-4">
+        {% for review in reviews %}
+        <li class="list-group-item">
+            <strong>{{ review.reviewer_name }}</strong> – ⭐ {{ review.rating }}
+            <p class="mb-0">{{ review.comment }}</p>
         </li>
         {% endfor %}
     </ul>
-{% else %}
-    <p>No reviews yet.</p>
-{% endif %}
+    {% else %}
+    <p class="text-muted">No reviews yet. Be the first to leave one!</p>
+    {% endif %}
+
+    <div class="text-center">
+        <a href="{{ url_for('main.home') }}" class="btn btn-outline-secondary">← Back to Home</a>
+    </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

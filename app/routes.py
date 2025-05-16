@@ -29,7 +29,9 @@ def search():
 @main.route('/movie/<int:movie_id>')
 def movie_detail(movie_id):
     movie = Movie.query.get_or_404(movie_id)
-    return render_template('detail.html', movie=movie)
+    reviews = Review.query.filter_by(movie_id=movie.id).order_by(Review.id.desc()).all()
+    return render_template('detail.html', movie=movie, reviews=reviews)
+
 
 @main.route('/movie/<int:movie_id>/review', methods=['POST'])
 def add_review(movie_id):
