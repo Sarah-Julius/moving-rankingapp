@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Movie Rankings</title>
+    <title>Movie Rankings App</title>
 </head>
 <body>
-    <h1>Top 20 Movies</h1>
+    <h1>🎬 Welcome to the Movie Rankings App</h1>
+    <p>Explore top-rated movies and compare them side-by-side.</p>
+
+    <!-- Search Form -->
+    <form action="{{ url_for('main.search') }}" method="GET">
+        <input type="text" name="query" placeholder="Search movies..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Top 20 Movies</h2>
     <ul>
         {% for movie in movies %}
         <li>
-            <strong>
-                <a href="/movie/{{ movie.id }}">{{ movie.title }}</a>
-            </strong>
+            <strong><a href="/movie/{{ movie.id }}">{{ movie.title }}</a></strong>
             ({{ movie.release_date }})<br>
             Rating: {{ movie.vote_average }} | Votes: {{ movie.vote_count }}
         </li>
         {% endfor %}
     </ul>
+
+    <p><a href="/compare">Compare Two Movies</a></p>
 </body>
 </html>
-<p><a href="/compare">Compare Two Movies</a></p>

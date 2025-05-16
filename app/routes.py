@@ -17,6 +17,16 @@ def home():
 
     return render_template('home.html', movies=movies, genres=genres)
 
+@main.route('/search')
+def search():
+    query = request.args.get('query', '')
+    if query:
+        results = Movie.query.filter(Movie.title.ilike(f"%{query}%")).all()
+    else:
+        results = []
+    return render_template('search_results.html', query=query, results=results)
+
+
 @main.route('/movie/<int:movie_id>')
 def movie_detail(movie_id):
     movie = Movie.query.get_or_404(movie_id)
