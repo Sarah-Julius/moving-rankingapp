@@ -1,19 +1,19 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from .models import Movie, Review
+from .models import Movie, Review, Genre
 from . import db
 
 main = Blueprint('main', __name__)
 
 @main.route('/')
 def home():
-    from .models import Genre
+    page = request.args.get('page', 1, type=int)
     genre_id = request.args.get('genre')
     genres = Genre.query.all()
 
     if genre_id:
-        movies = Movie.query.join(Movie.genres).filter(Genre.id == genre_id).all()
+        movies = Movie.query.join(Movie.genres).filter(Genre.id == genre_id).paginate(page=page, per_page=10)
     else:
-        movies = Movie.query.limit(20).all()
+        movies = Movie.query.paginate(page=page, per_page=10)
 
     return render_template('home.html', movies=movies, genres=genres)
 
@@ -25,7 +25,6 @@ def search():
     else:
         results = []
     return render_template('search_results.html', query=query, results=results)
-
 
 @main.route('/movie/<int:movie_id>')
 def movie_detail(movie_id):
@@ -55,7 +54,6 @@ def compare_movies():
         movie1 = Movie.query.get(movie1_id)
         movie2 = Movie.query.get(movie2_id)
 
-        # ✅ Pass movie objects (not just IDs)
         return render_template('compare_result.html', movie1=movie1, movie2=movie2)
 
     return render_template('compare.html', movies=movies)
@@ -80,7 +78,6 @@ def compare_movies_json(id1, id2):
 
 @main.route('/add_movie', methods=['GET', 'POST'])
 def add_movie():
-    from .models import Genre
     genres = Genre.query.all()
 
     if request.method == 'POST':

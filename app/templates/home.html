@@ -13,9 +13,9 @@
         <button type="submit">Search</button>
     </form>
 
-    <h2>Top 20 Movies</h2>
+    <h2>Top Movies</h2>
     <ul>
-        {% for movie in movies %}
+        {% for movie in movies.items %}
         <li>
             <strong><a href="/movie/{{ movie.id }}">{{ movie.title }}</a></strong>
             ({{ movie.release_date }})<br>
@@ -23,6 +23,19 @@
         </li>
         {% endfor %}
     </ul>
+
+    <!-- Pagination Controls -->
+    <div style="margin-top: 20px;">
+        {% if movies.has_prev %}
+            <a href="{{ url_for('main.home', page=movies.prev_num) }}">⬅ Previous</a>
+        {% endif %}
+
+        <span> Page {{ movies.page }} of {{ movies.pages }} </span>
+
+        {% if movies.has_next %}
+            <a href="{{ url_for('main.home', page=movies.next_num) }}">Next ➡</a>
+        {% endif %}
+    </div>
 
     <p><a href="/compare">Compare Two Movies</a></p>
 </body>
