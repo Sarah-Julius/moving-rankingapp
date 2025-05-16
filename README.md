@@ -77,12 +77,26 @@ Visit: `http://127.0.0.1:8000`
 
 ------
 
+🔧 Maintenance
+
+* Code is modularized using Flask Blueprints (auth.py, routes.py) for easy scalability.
+* Database changes are managed using Flask-Migrate for safe updates.
+* To reset or migrate the database:
+- flask db init
+- flask db migrate -m "Your message"
+- flask db upgrade
+
+* Config values (e.g. SECRET_KEY) can be updated in __init__.py or environment variables.
+
+
 ## 🔢 Testing
 
 * Custom test cases using `pytest`
 * Sample tests for models, routes, and form validation
 * Coverage reports available locally
-
+* Use Faker to generate realistic data for reviews and users
+* To run tests locally:pytest
+* ocal coverage reports can be generated with: pytest --cov=app
 ---
 
 
